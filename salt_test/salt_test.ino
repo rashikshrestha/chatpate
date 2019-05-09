@@ -1,6 +1,6 @@
 #define p 2
-#define in2 22
-#define in1 24
+#define in2 24
+#define in1 22
 #define en 8
 
 
@@ -41,7 +41,7 @@ void loop()
   }
 
 
-  if (opp==0 && stp >= 9 * rev)
+  if (opp==0 && stp >= 36 * rev)
   {
     Serial.println("Revolution Completed");
     //stop();
@@ -50,7 +50,7 @@ void loop()
     opp = 1;
   }
 
-  if(opp==1 && stp >= 9 * rev)
+  if(opp==1 && stp >= 36 * rev)
   {
     Serial.println("Opposite Revolution Completed");
     
