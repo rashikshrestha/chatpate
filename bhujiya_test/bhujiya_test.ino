@@ -3,6 +3,9 @@
 #define in1 24
 #define en 8
 
+bool wait = 0;
+int delay_time = 1;
+
 
 bool stat = 0;
 bool new_stat = 0;
@@ -41,39 +44,62 @@ void loop()
   }
 
 
-  if (opp==0 && stp >= 9 * rev)
+  if (opp == 0 && stp >= 8 * rev - 1 )
   {
+
+
     Serial.println("Revolution Completed");
     //stop();
+
+    
+
+    if (wait == 0)
+    {
+      Serial.println("Should be wating here");
+
+      stop();
+      delay(delay_time * 1000);
+
+      Serial.println("Waiting completed");
+      wait = 1;
+
+    }
     dir2();
+
+
     stp = 0;
     opp = 1;
   }
 
-  if(opp==1 && stp >= 9 * rev)
+  if (opp == 1 && stp >= 8 * rev)
   {
+
+
+
+
     Serial.println("Opposite Revolution Completed");
-    
+
     stop();
-    stp=0;
+    stp = 0;
     opp = 0;
-    
+    wait = 0;
+
   }
 
-  if(opp==2 && stp >= 36 * rev *2)
+  if (opp == 2 && stp >= 36 * rev * 2)
   {
     Serial.println("More Opposite Revolution Completed");
-    
+
     stop();
-    stp=0;
+    stp = 0;
     opp = 0;
 
     disp_cond();
-    
+
   }
 
-  
-  
+
+
 }
 
 void dir2()
@@ -122,29 +148,43 @@ void commander()
     if (cmd == 'd')
     {
       pwm -= 10;
-      Serial.println(pwm); 
+      Serial.println(pwm);
     }
 
     if (cmd == 'q')
     {
       rev += 1;
       Serial.println(rev);
-     
+
     }
 
     if (cmd == 'a')
     {
       rev -= 1;
       Serial.println(rev);
-      
+
     }
 
-    if(cmd == 'p')
+    if (cmd == '[')
+    {
+      delay_time += 1;
+      Serial.println(delay_time);
+
+    }
+
+    if (cmd == ']')
+    {
+      delay_time -= 1;
+      Serial.println(delay_time);
+
+    }
+
+    if (cmd == 'p')
     {
       disp_cond();
     }
 
-    if(cmd == 'n')
+    if (cmd == 'n')
     {
       stp = 0;
     }
@@ -161,10 +201,11 @@ void disp_cond()
   Serial.println("\n#######################################");
   Serial.print("PWM : ");
   Serial.println(pwm);
-   Serial.print("Rev : ");
+  Serial.print("Rev : ");
   Serial.println(rev);
   Serial.print("Stp : ");
   Serial.println(stp);
-  
+  Serial.print("Delay Time : ");
+  Serial.println(delay_time);
   Serial.println("#######################################\n");
 }
