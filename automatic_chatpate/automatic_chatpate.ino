@@ -6,10 +6,15 @@
 
 #include "system.h"
 
-System x;
+System x(1,2,3,4);
 
 void setup()
 {
+  Serial.begin(9600);
+
+  x.print_it();
+  
+  
   
 
 }

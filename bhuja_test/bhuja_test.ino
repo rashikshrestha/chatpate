@@ -1,6 +1,6 @@
 #define p 2
 #define in2 22
-#define in1 24
+#define in1 23
 #define en 8
 
 bool wait = 0;

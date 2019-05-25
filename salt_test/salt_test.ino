@@ -1,6 +1,6 @@
 #define p 2
-#define in2 24
-#define in1 22
+#define in2 22
+#define in1 23
 #define en 8
 
 
@@ -60,7 +60,7 @@ void loop()
     
   }
 
-  if(opp==2 && stp >= 36 * rev *2)
+  if(opp==2 && stp >= 36 * rev)
   {
     Serial.println("More Opposite Revolution Completed");
     
