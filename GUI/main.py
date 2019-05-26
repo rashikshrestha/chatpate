@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.messagebox
 import serial
 
 w = 800
@@ -17,10 +18,27 @@ div3 = 1
 rev4 = 1
 div4 = 1
 
+
 root = Tk()
 root.title('Chatpate Prototype Tester')
 root.iconbitmap(r'aayam icon.ico')
 root.geometry(str(w)+'x'+str(h))
+
+###########################  MENU BAR ########################################################
+
+def show_about_us():
+    about_us = 'Version: 1.0\nDate: 27th May, 2019\nDeveloper: Rashik Shrestha\nOS: Windows 10'
+    tkinter.messagebox.showinfo('Chatpate Prototype Tester', about_us)
+
+mainMenu = Menu(root)
+root.config(menu=mainMenu)
+
+subMenu = Menu(mainMenu)
+subMenu.add_command(label='About', command=show_about_us)
+
+mainMenu.add_cascade(label='Help', menu=subMenu)
+
+##############################################################################################
 
 def fn_delay_up(event):
     global delay_duration
@@ -217,7 +235,7 @@ f_D4.pack(side=LEFT)
 f_D4_i = Frame(f_D4)
 f_D4_ii = Frame(f_D4)
 
-f_E = Frame(root,pady=30)
+f_E = Frame(root,pady=20)
 f_E.pack() 
 
 f_F = Frame(root)
@@ -265,13 +283,13 @@ delay_down.pack(side=LEFT)
 
 ##############################################################################################
 
-Label(f_C1, text='PWM    ', padx = 20).pack(side=LEFT)
+Label(f_C1, text='PWM       ', padx = 20).pack(side=LEFT)
 
 pwm_up = Button(f_C1, text='^')
 pwm_up.bind('<Button-1>', fn_pwm_up)
 pwm_up.pack(side=LEFT)
 
-pwm_label = Label(f_C1, text=str(pwm), padx = 20)
+pwm_label = Label(f_C1, text=str(pwm), padx = 15)
 pwm_label.pack(side=LEFT)
 
 pwm_down = Button(f_C1, text='v')
