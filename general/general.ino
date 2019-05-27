@@ -21,7 +21,7 @@ int second_div = 1;
 int third_div = 1;
 int fourth_div = 1;
 
-int pwm = 100;
+int pwm = 150;
 char cmd;
 uint8_t mode = 1;
 uint8_t movements = 1;
@@ -78,7 +78,7 @@ void nullify_all()
 void motor_controller()
 {
 
-  if (mode == 1 && stp >= 36 / first_div * first_rev)
+  if (mode == 1 && stp >= (36 / first_div) * first_rev)
   {
     stp = 0;
 
@@ -321,12 +321,14 @@ void commander()
 
     if (cmd == 'q')
     {
+      Serial.print("Direction 1");
       in1 = int_pin_1;
       in2 = int_pin_2;
     }
 
     if (cmd == 'w')
     {
+      Serial.print("Direction 2");
       in1 = int_pin_2;
       in2 = int_pin_1;
     }
@@ -358,7 +360,16 @@ void commander()
       delay_duration -= 1;
       if (delay_duration < 0) delay_duration = 0;
     }
-
+  
+  if (cmd == 'Q')
+    {
+      movements += 1;
+    }
+  
+  if (cmd == 'W')
+    {
+      movements -= 1;
+    }
 
   }
 }

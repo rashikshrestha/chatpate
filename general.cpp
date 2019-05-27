@@ -358,6 +358,18 @@ void commander()
       delay_duration -= 1;
       if (delay_duration < 0) delay_duration = 0;
     }
+	
+	if (cmd == 'Q')
+    {
+      movements += 1;
+    }
+	
+	if (cmd == 'W')
+    {
+      movements -= 1;
+    }
+	
+	
 
 
   }
