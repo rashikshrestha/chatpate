@@ -368,9 +368,6 @@ void commander()
     {
       movements -= 1;
     }
-	
-	
-
 
   }
 }
