@@ -1,16 +1,18 @@
-#define p 2
-#define int_pin_1 22
-#define int_pin_2 23
-#define en 8
+#define p 2                       //PWM pin
+#define int_pin_1 22        //Motor direction control Pin 1
+#define int_pin_2 23      //Motor direction control Pin 1
+#define en 8                    //Encoder pin
 
 
 uint8_t in1 = int_pin_1;
 uint8_t  in2 = int_pin_2;
 
-bool stat = 0;
-bool new_stat = 0;
-int stp = 0;
+bool stat = 0;                //Varibale defined for certain logic operations in step_counter function
+bool new_stat = 0;       //Varibale defined for certain logic operations in step_counter function
 
+int stp = 0;                        //Stores the Steps
+
+//////////////Defines the number of Rotations (max 4 times) (given by rev/div) ////////////////////
 int first_rev = 1;
 int second_rev = 1;
 int third_rev = 1;
@@ -21,68 +23,77 @@ int second_div = 1;
 int third_div = 1;
 int fourth_div = 1;
 
-int pwm = 150;
-char cmd;
-uint8_t mode = 1;
-uint8_t movements = 1;
+uint8_t movements = 1;    //movement = 1 means only one rotation in given direction
+uint8_t mode = 1;             //mode = 1 means motor is doing first_rev case
 
-bool repeater = 0;
-uint8_t delay_duration = 1;
+///////////////////////////////////////////////////////////////////////////////////
+
+
+int pwm = 150;          //PWM of rotation
+
+char cmd;                 //Varibale defined for certain  operations in commander function
+
+
+
+bool repeater = 0;                //0 = continuous mode off, 1 = continuous mode off (Ask Akash dai what is Continuous Rotation Mode while testing using GUI !!!!!)
+uint8_t delay_duration = 1;   //Delay time required in case of Continuous Rotation Mode
 
 void setup()
 {
   Serial.begin(9600);
 
+  ///////////////////////PINs MODE initialization//////////////////
   pinMode(en, INPUT);
   pinMode(p, OUTPUT);
   pinMode(in1, OUTPUT);
   pinMode(in1, OUTPUT);
+  ////////////////////////////////////////////////////////////
 
-  disp_cond();
+  disp_cond();  //Displays the current status of different variables
 
 }
 
 void loop()
 {
-  commander();
-  step_counter();
-  motor_controller();
+  commander();             //Used to change the variable values in between
+  step_counter();         //Counts the steps and update 'stp' variable
+  motor_controller();   //Controlls motors
 }
 
-void dir1()
+void dir1()    //Rotate Motor in Direction 1
 {
   analogWrite(p, pwm);
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
 }
 
-void dir2()
+void dir2()    //Rotate Motor in Direction 2
 {
   analogWrite(p, pwm);
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 }
 
-void stop()
+void stop()   //Stops the Motor
 {
   analogWrite(p, 0);
 }
 
-void nullify_all()
+void nullify_all()    //Reset all the variables with their default values
 {
   stop();
   stp = 0;
   mode = 1;
 }
 
-void motor_controller()
+void motor_controller()  //Controls Motors (Has its own hardcoded logic to perform the specific task as per values in various variables)
 {
 
   if (mode == 1 && stp >= (36 / first_div) * first_rev)
   {
     stp = 0;
 
-    if (movements == 1)
+    if (movements == 1)    //Of only one motion required: Stop the motor here 
     {
       mode = 1;
       stop();
@@ -94,7 +105,7 @@ void motor_controller()
       }
     }
 
-    else
+    else                      //Else change the motor direction and get ready for next motion
     {
       mode = 2;
       dir2();
@@ -166,10 +177,11 @@ void motor_controller()
 
 }
 
-void step_counter()
+void step_counter()    //Counts the step
 {
-  new_stat = digitalRead(en);
-  if (new_stat != stat)
+  new_stat = digitalRead(en);  //Reads en Pin
+  
+  if (new_stat != stat)              //IF Pin status toggles
   {
     stat = new_stat;
     stp++;
@@ -178,11 +190,11 @@ void step_counter()
   }
 }
 
-void commander()
+void commander()       //Change various variables during the program run
 {
-  while (Serial.available())
+  while (Serial.available())   //If data recieved:
   {
-    cmd = Serial.read();
+    cmd = Serial.read();      
 
     if (cmd == 'r')
     {
@@ -207,7 +219,7 @@ void commander()
       Serial.println(pwm);
     }
 
-    //CONTROLLING NO OF REVOLUTIONS:
+    /////////////////////////CONTROLLING NO OF REVOLUTIONS: /////////////////////////
     if (cmd == 'a')
     {
       first_rev += 1;
@@ -260,7 +272,7 @@ void commander()
       Serial.println(fourth_rev);
     }
 
-    //CONTROLLING DIVISOR
+    ////////////////////////////////CONTROLLING DIVISOR///////////////////////////
     if (cmd == 'g')
     {
       first_div += 1;
@@ -317,7 +329,7 @@ void commander()
       Serial.println(fourth_div);
     }
 
-    //CONTROLLING DIRECTION:
+    //////////////////////////////////CONTROLLING DIRECTION:////////////////////////////
 
     if (cmd == 'q')
     {
@@ -333,12 +345,14 @@ void commander()
       in2 = int_pin_1;
     }
 
-    //DISPLAYING VALUES:
+    ///////////////////////////////////////DISPLAYING VALUES://///////////////////////////
 
     if (cmd == 'p')
     {
       disp_cond();
     }
+
+  //////////////////////////////////////// Turn On or Off Continuous MODE ////////////////////
 
     if (cmd == 'y')
     {
@@ -350,6 +364,8 @@ void commander()
       repeater = 0;
     }
 
+  ////////////////////////////////////// Change Delay Duration ////////////////////
+   
     if (cmd == 'i')
     {
       delay_duration += 1;
@@ -360,6 +376,9 @@ void commander()
       delay_duration -= 1;
       if (delay_duration < 0) delay_duration = 0;
     }
+
+
+    ////////////////////////////////////////Change Number of Motions /////////////////////////////
   
   if (cmd == 'Q')
     {
@@ -374,7 +393,7 @@ void commander()
   }
 }
 
-void disp_cond()
+void disp_cond()            //Displays all the variables
 {
   Serial.println("\n#######################################");
 
