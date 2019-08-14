@@ -1,6 +1,8 @@
 #define wait 1000
 
-#define A1_pwm    11 ;   #define A1_dir      40    #define A1_enc      27
+#define A1_pwm    11
+#define A1_dir      40
+#define A1_enc      27
 
 #define A2_pwm    10
 #define A2_dir      38

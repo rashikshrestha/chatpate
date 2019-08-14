@@ -3,7 +3,15 @@
 
 #define wait 1000
 
-uint8_t Chatmasala_values[10] = {255,  1,   1,1  ,1,1,  0,1,  0,1};
+uint8_t Sequence_values[7][10] = {
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Chatmashala
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Chilly
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Bhuja
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Onion
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Chana
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1},         //Noodles
+                                                              {255,  1,   1,1  ,1,1,  0,1,  0,1}          //Birenoon
+                                                        };
 
 
 System Chatmasala(Chatmashala_pwm, Chatmashala_dir, Chatmashala_enc);
@@ -16,45 +24,43 @@ System Birenoon(Birenoon_pwm, Birenoon_dir, Birenoon_enc);
 
 void setup()
 {
-
   Serial.begin(9600);
-  
 }
 
 void loop()
 {
-    Chatmasala.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-    Chilly.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-    Bhuja.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-    Onion.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-    Chana.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-    Noodles.run_seq(Chatmasala_values);
-
-    delay(1000);
-
-//    Birenoon.run_seq(Chatmasala_values);
-//
-//    delay(1000);
-
-    
-
-    
-
-    
-
+   
+    make_chatpate();
 }
+
+void make_chatpate()
+{
+   Chatmasala.run_seq(Sequence_values[0]);
+
+    delay(wait);
+    
+   Chilly.run_seq(Sequence_values[1]);
+
+    delay(wait);
+
+    Bhuja.run_seq(Sequence_values[2]);
+
+    delay(wait);
+
+    Onion.run_seq(Sequence_values[3]);
+
+    delay(wait);
+
+    Chana.run_seq(Sequence_values[4]);
+
+    delay(wait);
+
+    Noodles.run_seq(Sequence_values[5]);
+
+    delay(wait);
+
+    Birenoon.run_seq(Sequence_values[6]);
+
+    delay(wait);
+}
+
