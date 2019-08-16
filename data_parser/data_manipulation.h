@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Stream.h>
 
+#define DATA_LENGTH 160
+
 class DataParser
 {
   private:
@@ -19,21 +21,26 @@ class DataParser
     {
       _stream = &stream;
       _timeout = timeout;
+      _stream->setTimeout(_timeout);
     }
 
     void wait_for_data()
     {
+      bool dummy = 1;
       while (!_stream->available())
       {
-        Serial.println("Waiting For Data");
+        if (dummy)
+        {
+          Serial.print("Waiting For Data");
+          dummy = 0;
+        }
+        Serial.print(".");
+
         delay(100);
       }
+      Serial.println();
 
-      while (_stream->available() > 0)
-      {
-        inChar = _stream->read();
-        data += (char)inChar;
-      }
+      data = _stream->readStringUntil('\n');
     }
 
     uint8_t* get_values()
@@ -62,25 +69,63 @@ class DataParser
 
     }
 
-    void print_data()
+    bool validate_data()
     {
+      uint8_t confidence_level = 0;
+
       Serial.println();
 
       Serial.print("Recieved Data is :  ");
       Serial.println(data);
 
+      Serial.print("Size:  ");
+      Serial.print(data.length());
+      Serial.println("  (expected "  + String(DATA_LENGTH) + " )");
+
+      if (data.length() == DATA_LENGTH)
+      {
+        Serial.println("Length Verified !!!");
+        confidence_level++;
+      }
+      else
+      {
+        Serial.println("Length Error !!!");
+      }
+
 
       if (data.startsWith(header))
       {
         Serial.println("Header Verified !!! ");
+        confidence_level++;
+      }
+      else
+      {
+        Serial.println("Header Error !!! ");
       }
 
       if (data.endsWith(footer))
       {
         Serial.println("Footer Verified !!! ");
+        confidence_level++;
+      }
+      else
+      {
+        Serial.println("Footer Error !!! ");
       }
 
-      Serial.println();
+      if (confidence_level == 3)
+      {
+        Serial.println("  >>> VALID DATA \n");
+        return 1;
+      }
+
+      else
+      {
+        Serial.println("  >>> ERROR !!!!    INVALID DATA \n");
+        return 0;
+      }
+
+
     }
 
     void nullify()
